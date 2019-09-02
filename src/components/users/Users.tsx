@@ -5,14 +5,14 @@ import { isEmpty } from "lodash";
 import moment from "moment";
 import { Button } from "@material-ui/core";
 
-import { CommonTable } from "../common/CommonTable";
+import CommonTable from "../common/CommonTable";
 import { Search } from "../common/Search";
 import User from "../../types/Users.interface";
 import { SortSettings } from "../../types/SortSettings.interface";
 import { setSortSettings } from "../../actions";
 import "./Users.css";
 
-const API_URL = `https://randomapi.com/api/k4l4zuh8?key=952K-DS3V-Z87L-61RL&results=10`;
+const API_URL = `https://randomapi.com/api/k4l4zuh8?key=952K-DS3V-Z87L-61RL&results=3`;
 
 interface FinderType {
   users_data: User[];
@@ -20,28 +20,10 @@ interface FinderType {
 }
 
 export class Users extends Component<FinderType, any> {
-  // refreshUsers() {
-  //   fetch(API_URL).then(res => {
-  //     if (res.status !== 200) {
-  //       this.setState({ error: true });
-  //       return;
-  //     } else {
-  //       res.json().then(data => {
-  //         /**
-  //          *  My (first)attempt to use redux for this app.
-  //          *  Im sorry this was my first time to do so
-  //          *  it gave me a hard time for such a small app but
-  //          *  think i can utilize this more with a much larger app.
-  //          */
-  //         this.props.setUsersData(data.results);
-  //       });
-  //     }
-  //   });
-  // }
   constructor(props: FinderType) {
     super(props);
     this.state = {
-      users_data: [],
+      filtered_users_data: [],
       error: false
     };
   }
@@ -49,34 +31,29 @@ export class Users extends Component<FinderType, any> {
   loadUsers(searchResults: User[] = []) {
     if (!isEmpty(searchResults)) {
       this.setState({
-        users_data: searchResults
+        filtered_users_data: searchResults
       });
       return;
     } else {
-      fetch(API_URL).then(res => {
-        if (res.status !== 200) {
-          this.setState({ error: true });
-          return;
-        } else {
-          res.json().then(data => {
-            this.setState({
-              users_data: data.results
-            });
-          });
-        }
+      this.setState({
+        filtered_users_data: []
       });
     }
   }
 
   render() {
-    // const users = !isEmpty(this.props.users_data)
-    //   ? this.props.users_data
-    //   : this.state.users_data;
+    const users = !!this.state.filtered_users_data.length
+      ? this.state.filtered_users_data
+      : this.props.users_data;
 
-    const users = this.props.users_data;
-    console.log("USERS DATA? ", users);
     const dataDef = {
-      headers: ["Name", "Address", "Date of birth", "Gender", "Country"],
+      headers: [
+        { label: "Name", key: "name" },
+        { label: "Address", key: "address" },
+        { label: "Date of birth", key: "date_of_birth" },
+        { label: "Gender", key: "gender" },
+        { label: "Country", key: "country" }
+      ],
       columns: ["name", "address", "date_of_birth", "gender", "country"],
       override: {
         date_of_birth: (date: Date) => {
@@ -91,7 +68,7 @@ export class Users extends Component<FinderType, any> {
           <Button
             variant="contained"
             className="refresh"
-            onClick={this.props.refreshData.bind(this)}
+            onClick={this.props.refreshData}
           >
             Refresh
           </Button>

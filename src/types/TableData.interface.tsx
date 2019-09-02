@@ -1,6 +1,9 @@
 export interface TableData {
   dataDef: {
-    headers: string[];
+    headers: {
+      label: string;
+      key: string;
+    }[];
     columns: string[];
     override?: any;
   };

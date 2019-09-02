@@ -8,7 +8,7 @@ export function sortData(
 ): SortSettings {
   switch (action.type) {
     case SET_SORT_SETTINGS:
-      const results = { ...state, sort: action.data.sort };
+      const results = { ...state, ...action.data };
       return results;
   }
   return state;

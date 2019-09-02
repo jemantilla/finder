@@ -6,7 +6,7 @@ import Users from "./components/users/Users";
 import "./App.css";
 import User from "./types/Users.interface";
 
-const API_URL = `https://randomapi.com/api/k4l4zuh8?key=952K-DS3V-Z87L-61RL&results=10`;
+const API_URL = `https://randomapi.com/api/k4l4zuh8?key=952K-DS3V-Z87L-61RL&results=3`;
 
 interface FinderState {
   users_data: User[];
@@ -51,7 +51,7 @@ export class App extends Component<any, FinderState> {
           {users_data.length > 0 ? (
             <Users
               users_data={this.state.users_data}
-              refreshData={this.loadUsers}
+              refreshData={this.loadUsers.bind(this)}
             />
           ) : (
             ""

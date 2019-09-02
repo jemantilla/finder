@@ -1,6 +1,4 @@
 export interface SortSettings {
-  sort: {
-    key: string;
-    direction: "asc" | "desc";
-  }[];
+  name: "asc" | "desc";
+  date_of_birth: "asc" | "desc";
 }

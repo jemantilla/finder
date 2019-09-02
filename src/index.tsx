@@ -8,16 +8,8 @@ import App from "./App";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 const store = createStore(sortData, {
-  sort: [
-    {
-      key: "name",
-      direction: "asc"
-    },
-    {
-      key: "date_of_birth",
-      direction: "asc"
-    }
-  ]
+  name: "asc",
+  date_of_birth: "asc"
 });
 
 ReactDOM.render(
