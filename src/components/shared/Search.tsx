@@ -10,19 +10,19 @@ export function Search(props: {
   reloadData: Function;
 }) {
   function onChange(event: any) {
-    const searchQuery = event.target.value;
+    const searchQuery = (event.target.value).toLocaleLowerCase().trim();
     let newData: User[] = [];
 
     if (!!searchQuery) {
       newData = filter(props.data, function(rowData: User) {
         const nameMatched =
-          rowData.name.toLocaleLowerCase().indexOf(searchQuery) !== -1;
+          rowData.name.toLocaleLowerCase().trim().indexOf(searchQuery) !== -1;
         const addressMatched =
-          rowData.address.toLocaleLowerCase().indexOf(searchQuery) !== -1;
+          rowData.address.toLocaleLowerCase().trim().indexOf(searchQuery) !== -1;
         const genderMatched =
-          rowData.gender.toLocaleLowerCase().indexOf(searchQuery) !== -1;
+          rowData.gender.toLocaleLowerCase().trim().indexOf(searchQuery) !== -1;
         const countryMatched =
-          rowData.country.toLocaleLowerCase().indexOf(searchQuery) !== -1;
+          rowData.country.toLocaleLowerCase().trim().indexOf(searchQuery) !== -1;
         return nameMatched || addressMatched || genderMatched || countryMatched;
       });
     }

@@ -1,4 +1,3 @@
-import { find } from "lodash";
 import React from "react";
 import {
   Table,
@@ -11,25 +10,24 @@ import {
 
 import { TableData } from "../../types/TableData.interface";
 import { SortSettings } from "../../types/SortSettings.interface";
-import { setSortSettings } from "../../actions";
-import { connect } from "react-redux";
 
-interface setSortSettings {
-  setSortSettings?: () => void;
-}
+interface DispatchProps {setSortSettings: () => void}
 
-type Props = TableData & SortSettings;
+type Props = SortSettings & //state props
+            DispatchProps & // dispatch props
+            TableData // own props
 
-export function CommonTable(props: Partial<Props> | any) {
-  const { dataDef, data }: TableData = props;
-
-  console.log("GOT PROPS", props);
-
+export function CommonTable(props: Props | any) {
+  const { dataDef, data, reloadData }: TableData = props;
+  
   function sort(key: string) {
-    props.setSortSettings({
-      sort: []
-    });
-    console.log("clicked to sort", key);
+    const newState = {
+      ...props.sort
+    }
+    
+    newState[key] = props.sort[key] === 'desc' ? 'asc' : 'desc'    
+    props.setSortSettings(newState);    
+    reloadData(data)
   }
 
   function renderSortLabel(key: string, direction: "asc" | "desc") {
@@ -75,15 +73,4 @@ export function CommonTable(props: Partial<Props> | any) {
   );
 }
 
-const mapStateToProps = (state: SortSettings) => ({
-  sort: state
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  setSortSettings: (data: SortSettings) => dispatch(setSortSettings(data))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CommonTable);
+export default CommonTable;

@@ -7,6 +7,7 @@ import { sortData } from "./reducers";
 import App from "./App";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
+
 const store = createStore(sortData, {
   name: "asc",
   date_of_birth: "asc"

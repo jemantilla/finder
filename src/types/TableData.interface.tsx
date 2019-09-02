@@ -8,4 +8,5 @@ export interface TableData {
     override?: any;
   };
   data: any[];
+  reloadData: ([]) => void;
 }

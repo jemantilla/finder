@@ -1,37 +1,35 @@
 import { Component } from "react";
 import React from "react";
-import { connect } from "react-redux";
 import { isEmpty } from "lodash";
 import moment from "moment";
 import { Button } from "@material-ui/core";
 
-import CommonTable from "../common/CommonTable";
-import { Search } from "../common/Search";
+import CommonTable from "../shared/CommonTable";
+import { Search } from "../shared/Search";
 import User from "../../types/Users.interface";
-import { SortSettings } from "../../types/SortSettings.interface";
-import { setSortSettings } from "../../actions";
 import "./Users.css";
+import { SortSettings } from "../../types/SortSettings.interface";
+;
 
-const API_URL = `https://randomapi.com/api/k4l4zuh8?key=952K-DS3V-Z87L-61RL&results=3`;
-
+interface DispatchProps {setSortSettings: () => void}
 interface FinderType {
   users_data: User[];
   refreshData?: () => void;
 }
 
-export class Users extends Component<FinderType, any> {
-  constructor(props: FinderType) {
+type Props = SortSettings & DispatchProps & FinderType
+
+export class Users extends Component<Props | any, any> {  
+  constructor(props: Props){
     super(props);
     this.state = {
-      filtered_users_data: [],
-      error: false
-    };
+      filtered_users_data: []
+    }
   }
-
-  loadUsers(searchResults: User[] = []) {
-    if (!isEmpty(searchResults)) {
+  loadUsers(filtered_users_data: User[] = []) {
+    if (!isEmpty(filtered_users_data)) {
       this.setState({
-        filtered_users_data: searchResults
+        filtered_users_data: filtered_users_data
       });
       return;
     } else {
@@ -39,12 +37,13 @@ export class Users extends Component<FinderType, any> {
         filtered_users_data: []
       });
     }
-  }
+  }  
 
   render() {
     const users = !!this.state.filtered_users_data.length
       ? this.state.filtered_users_data
-      : this.props.users_data;
+      : this.props.users_data;    
+
 
     const dataDef = {
       headers: [
@@ -65,23 +64,36 @@ export class Users extends Component<FinderType, any> {
     return (
       <div className="page-section">
         <div className="table-menu">
+
           <Button
             variant="contained"
             className="refresh"
-            onClick={this.props.refreshData}
+            onClick={this.props.refreshData.bind(this,[])}
           >
             Refresh
           </Button>
+
           <Search
             name="search-field"
             data={users}
             reloadData={this.loadUsers.bind(this)}
           />
+
         </div>
+        
         {this.state.error ? (
+
           <p>No results found</p>
+
         ) : (
-          <CommonTable dataDef={dataDef} data={users} />
+
+          <CommonTable 
+            dataDef={dataDef} 
+            data={users} 
+            reloadData={this.props.refreshData} 
+            setSortSettings={this.props.setSortSettings}
+            sort={this.props.sort}
+            />            
         )}
       </div>
     );
@@ -89,16 +101,3 @@ export class Users extends Component<FinderType, any> {
 }
 
 export default Users;
-
-// const mapStateToProps = (state: FinderType) => ({
-//   sort: state.sor
-// });
-
-// const mapDispatchToProps = (dispatch: any) => ({
-//   setSortSettings: (data: SortSettings) => dispatch(setSortSettings(data))
-// });
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(Users);
