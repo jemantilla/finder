@@ -8,46 +8,42 @@ import { Button } from "@material-ui/core";
 import { CommonTable } from "../common/CommonTable";
 import { Search } from "../common/Search";
 import User from "../../types/Users.interface";
-import { FinderStore } from "../../types/FinderStore.interface";
-import { setUsersData } from "../../actions";
+import { SortSettings } from "../../types/SortSettings.interface";
+import { setSortSettings } from "../../actions";
 import "./Users.css";
 
 const API_URL = `https://randomapi.com/api/k4l4zuh8?key=952K-DS3V-Z87L-61RL&results=10`;
 
-interface FinderProps {
+interface FinderType {
   users_data: User[];
-  setUsersData: (usersData: User[]) => void;
+  refreshData?: () => void;
 }
 
-export class Users extends Component<FinderProps, any> {
-  constructor(props: any) {
+export class Users extends Component<FinderType, any> {
+  // refreshUsers() {
+  //   fetch(API_URL).then(res => {
+  //     if (res.status !== 200) {
+  //       this.setState({ error: true });
+  //       return;
+  //     } else {
+  //       res.json().then(data => {
+  //         /**
+  //          *  My (first)attempt to use redux for this app.
+  //          *  Im sorry this was my first time to do so
+  //          *  it gave me a hard time for such a small app but
+  //          *  think i can utilize this more with a much larger app.
+  //          */
+  //         this.props.setUsersData(data.results);
+  //       });
+  //     }
+  //   });
+  // }
+  constructor(props: FinderType) {
     super(props);
     this.state = {
-      users_data: []
+      users_data: [],
+      error: false
     };
-  }
-
-  componentDidMount() {
-    this.loadUsers();
-  }
-
-  refreshUsers() {
-    fetch(API_URL).then(res => {
-      if (res.status !== 200) {
-        this.setState({ error: true });
-        return;
-      } else {
-        res.json().then(data => {
-          /**
-           *  My (first)attempt to use redux for this app.
-           *  Im sorry this was my first time to do so
-           *  it gave me a hard time for such a small app but
-           *  think i can utilize this more with a much larger app.
-           */
-          this.props.setUsersData(data.results);
-        });
-      }
-    });
   }
 
   loadUsers(searchResults: User[] = []) {
@@ -73,9 +69,12 @@ export class Users extends Component<FinderProps, any> {
   }
 
   render() {
-    const users = !isEmpty(this.props.users_data)
-      ? this.props.users_data
-      : this.state.users_data;
+    // const users = !isEmpty(this.props.users_data)
+    //   ? this.props.users_data
+    //   : this.state.users_data;
+
+    const users = this.props.users_data;
+    console.log("USERS DATA? ", users);
     const dataDef = {
       headers: ["Name", "Address", "Date of birth", "Gender", "Country"],
       columns: ["name", "address", "date_of_birth", "gender", "country"],
@@ -92,7 +91,7 @@ export class Users extends Component<FinderProps, any> {
           <Button
             variant="contained"
             className="refresh"
-            onClick={this.refreshUsers.bind(this)}
+            onClick={this.props.refreshData.bind(this)}
           >
             Refresh
           </Button>
@@ -112,15 +111,17 @@ export class Users extends Component<FinderProps, any> {
   }
 }
 
-const mapStateToProps = (state: FinderStore) => ({
-  users_data: state.users_data
-});
+export default Users;
 
-const mapDispatchToProps = (dispatch: any) => ({
-  setUsersData: (usersData: User[]) => dispatch(setUsersData(usersData))
-});
+// const mapStateToProps = (state: FinderType) => ({
+//   sort: state.sor
+// });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Users);
+// const mapDispatchToProps = (dispatch: any) => ({
+//   setSortSettings: (data: SortSettings) => dispatch(setSortSettings(data))
+// });
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(Users);
