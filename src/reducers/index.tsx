@@ -1,12 +1,15 @@
-import { FinderStore } from '../types/FinderStore.interface';
-import { SetUsersData } from '../actions';
-import { SET_USERS_DATA } from '../constants';
+import { SortSettings } from "../types/SortSettings.interface";
+import { SetSortSettings } from "../actions";
+import { SET_SORT_SETTINGS } from "../constants";
 
-export function userData(state: FinderStore, action: SetUsersData): FinderStore {     
-    switch (action.type) {
-        case SET_USERS_DATA:
-            const results = { ...state, users_data: action.users_data}            
-        return results;
-    }    
-    return state;
+export function sortData(
+  state: SortSettings,
+  action: SetSortSettings
+): SortSettings {
+  switch (action.type) {
+    case SET_SORT_SETTINGS:
+      const results = { ...state, ...action.data };
+      return results;
+  }
+  return state;
 }

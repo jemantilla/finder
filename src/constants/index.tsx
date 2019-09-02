@@ -1,2 +1,2 @@
-export const SET_USERS_DATA = 'SET_USERS_DATA';
-export type SET_USERS_DATA = typeof SET_USERS_DATA;
+export const SET_SORT_SETTINGS = "SET_SORT_SETTINGS";
+export type SET_SORT_SETTINGS = typeof SET_SORT_SETTINGS;
